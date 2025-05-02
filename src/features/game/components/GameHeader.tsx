@@ -1,6 +1,6 @@
 // features/game/components/GameHeader.tsx
 import { Box } from '@mui/material';
-import GameAlert from '@/ui/GameAlert';
+import GameAlert from '@/ui/alerts/GameAlert';
 
 export const GameHeader = ({ lastGameResult }: { 
   lastGameResult: { result: number; win: boolean; choice: 'greater' | 'lesser' } | null 

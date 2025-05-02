@@ -16,17 +16,19 @@ const GameControls = memo(function GameControls({
   onValueChange,
   onChoiceChange
 }: GameControlsProps) {
-  const rafId = useRef<number | undefined>(undefined); // [!code ++]
+  const rafId = useRef<number | undefined>(undefined);
 
   const handleChoiceChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => onChoiceChange(e.target.value as Choice),
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChoiceChange(e.target.value as Choice);
+    },
     [onChoiceChange]
   );
 
   const handleSliderChange = useCallback(
     (_: Event, value: number | number[]) => {
       const newValue = value as number;
-      if (rafId.current) {
+      if (rafId.current !== undefined) {
         cancelAnimationFrame(rafId.current);
       }
       rafId.current = requestAnimationFrame(() => {
@@ -36,28 +38,41 @@ const GameControls = memo(function GameControls({
     [onValueChange]
   );
 
-  // Очистка при размонтировании  // [!code ++]
   useEffect(() => {
     return () => {
-      if (rafId.current) {
+      if (rafId.current !== undefined) {
         cancelAnimationFrame(rafId.current);
       }
     };
   }, []);
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box>
       <RadioGroup
         row
         value={selectedChoice}
         onChange={handleChoiceChange}
-        sx={{ justifyContent: 'center', mb: 3 }}
+        sx={{ 
+          justifyContent: 'center', 
+          mt: 3,
+          mb: 4
+        }}
       >
-        <FormControlLabel value="lesser" control={<Radio />} label="Under" />
-        <FormControlLabel value="greater" control={<Radio />} label="Over" />
+        <FormControlLabel 
+          value="lesser" 
+          control={<Radio />} 
+          label="Under"
+          labelPlacement="start" 
+        />
+        <FormControlLabel 
+          value="greater" 
+          control={<Radio />} 
+          label="Over" 
+          labelPlacement="start"
+        />
       </RadioGroup>
 
-      <Box sx={{ width: '100%', mt: 2 }}>
+      <Box>
         <Slider
           value={targetValue}
           onChange={handleSliderChange}

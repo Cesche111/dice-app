@@ -3,6 +3,7 @@ import { useGameLogic } from '@/features/game/hooks/useGameLogic';
 import { GameHeader } from '@/features/game/components/GameHeader';
 import { GameDashboard } from '@/features/game/components/GameDashboard';
 import HistoryTable from '@/features/game/components/HistoryTable';
+import PlayButton from '@/ui/buttons/PlayButton';
 
 export default function DiceGame() {
   const {
@@ -16,7 +17,7 @@ export default function DiceGame() {
   } = useGameLogic();
 
   return (
-    <Box sx={{ 
+    <Box sx={{
       maxWidth: (theme) => theme.sizes.container,
       width: '100%',
       mx: 'auto',
@@ -24,7 +25,7 @@ export default function DiceGame() {
       p: 2
     }}>
       <GameHeader lastGameResult={lastGameResult} />
-      
+
       <GameDashboard
         targetValue={targetValue}
         selectedChoice={selectedChoice}
@@ -32,17 +33,7 @@ export default function DiceGame() {
         onChoiceChange={setSelectedChoice}
       />
 
-      <Button
-        variant="contained"
-        color="secondary"
-        fullWidth
-        onClick={handlePlay}
-        sx={{
-          mb: 3,
-          '&:hover': { transform: 'scale(1.05)', transition: 'transform 0.3s' }
-        }}>
-        PLAY
-      </Button>
+      <PlayButton onClick={handlePlay} />
 
       <HistoryTable history={history} />
     </Box>

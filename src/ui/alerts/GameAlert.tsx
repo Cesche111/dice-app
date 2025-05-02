@@ -8,34 +8,22 @@ interface GameAlertProps {
 
 const GameAlert = memo(function GameAlert({ win, choice }: GameAlertProps) {
     const [opacity, setOpacity] = useState(0);
-    const rafId = useRef<number | undefined>(undefined); // Исправлено здесь
-    const alertRef = useRef<HTMLDivElement>(null);
+    const rafId = useRef<number | undefined>(undefined);
 
     useEffect(() => {
-        rafId.current = requestAnimationFrame(() => {
-            setOpacity(1);
-        });
-
+        rafId.current = requestAnimationFrame(() => setOpacity(1));
         return () => {
-            if (rafId.current) {
-                cancelAnimationFrame(rafId.current);
-            }
+            if (rafId.current) cancelAnimationFrame(rafId.current);
         };
     }, []);
 
     return (
         <Alert
-            ref={alertRef}
             severity={win ? "success" : "error"}
             variant="filled"
             sx={{ 
-                width: '100%',
-                opacity: opacity,
-                transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                '& .MuiAlert-message': {
-                    width: '100%',
-                    py: 1
-                }
+                opacity,
+                transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}
         >
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
