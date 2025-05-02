@@ -52,31 +52,42 @@ const GameControls = memo(function GameControls({
         row
         value={selectedChoice}
         onChange={handleChoiceChange}
-        sx={{ 
-          justifyContent: 'center', 
+        sx={{
+          justifyContent: 'center',
           mt: 3,
-          mb: 4
+          mb: 4,
         }}
       >
-        <FormControlLabel 
-          value="lesser" 
-          control={<Radio />} 
+        <FormControlLabel
+          value="lesser"
+          control={<Radio size="small" />}
           label="Under"
-          labelPlacement="start" 
+          labelPlacement="start"
         />
-        <FormControlLabel 
-          value="greater" 
-          control={<Radio />} 
-          label="Over" 
+        <FormControlLabel
+          value="greater"
+          control={<Radio size="small" />}
+          label="Over"
           labelPlacement="start"
         />
       </RadioGroup>
 
       <Box>
         <Slider
+          size="small"
           value={targetValue}
           onChange={handleSliderChange}
+          min={0}
           max={100}
+          step={1}
+          marks={[
+            { value: 0 },
+            { value: 20 },
+            { value: 40 },
+            { value: 60 },
+            { value: 80 },
+            { value: 100 }
+          ]}
         />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography variant="caption">0</Typography>

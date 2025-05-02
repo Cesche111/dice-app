@@ -1,59 +1,92 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme, alpha } from '@mui/material/styles';
+
+declare module '@mui/material/styles' {
+  interface Theme {
+    sizes: {
+      container: number;
+      controls: number;
+    };
+  }
+
+  interface ThemeOptions {
+    sizes?: {
+      container?: number;
+      controls?: number;
+    };
+  }
+
+  interface TypographyVariants {
+    historyTableHeader: React.CSSProperties;
+    historyTableCell: React.CSSProperties;
+  }
+
+  interface TypographyVariantsOptions {
+    historyTableHeader?: React.CSSProperties;
+    historyTableCell?: React.CSSProperties;
+  }
+}
+
+declare module '@mui/material/Typography' {
+  interface TypographyPropsVariantOverrides {
+    historyTableHeader: true;
+    historyTableCell: true;
+  }
+}
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#9c27b0'
+      main: '#9c27b0',
     },
     secondary: {
       main: '#9C27B0',
-      contrastText: '#fff'
+      dark: '#9C27B0',
+      contrastText: '#fff',
     },
     error: {
-      main: '#D32F2F'
+      main: '#D32F2F',
     },
     success: {
-      main: '#2E7D32'
+      main: '#2E7D32',
     },
-    text: {
-      primary: 'rgba(0, 0, 0, 0.87)'
+    background: {
+      paper: alpha('#000', 0.04)
     }
   },
   typography: {
+    fontFamily: 'Roboto, Arial, sans-serif',
     h1: {
-      fontFamily: 'Roboto',
       fontWeight: 300,
-      fontSize: '96px',
+      fontSize: '6rem',
       lineHeight: 1.17,
       letterSpacing: '-1.5px'
     },
-    body1: {
+    historyTableHeader: {
       fontFamily: 'Roboto',
       fontWeight: 400,
-      fontSize: '16px',
-      lineHeight: 1.5,
-      letterSpacing: '0.15px'
+      fontSize: '14px',
+      lineHeight: 1.43,
+      letterSpacing: '0.17px'
     },
-    caption: {
+    historyTableCell: {
       fontFamily: 'Roboto',
       fontWeight: 400,
-      fontSize: '0.75rem',
-      color: 'rgba(0, 0, 0, 0.6)'
+      fontSize: '14px',
+      lineHeight: 1.43,
+      letterSpacing: '0.17px'
     }
   },
   components: {
     MuiButton: {
       styleOverrides: {
         containedSecondary: {
-          width: '100%',
-          height: '42px',
-          padding: '8px 22px',
-          borderRadius: '4px',
+          width: '320px',
+          height: 42,
           textTransform: 'none',
-          fontSize: '1rem',
-          '&:hover': {
-            transform: 'scale(1.05)',
-            transition: 'transform 0.3s'
+          transition: 'transform 0.3s',
+          '&:hover, &:active, &:focus': {
+            backgroundColor: '#9C27B0',
+            transform: 'scale(1.05)'
           }
         }
       }
@@ -61,83 +94,31 @@ const theme = createTheme({
     MuiAlert: {
       styleOverrides: {
         root: {
-          width: '100%',
-          '& .MuiAlert-message': {
-            width: '100%',
-            paddingTop: '8px',
-            paddingBottom: '8px'
-          }
+          width: '100%'
         },
         filledSuccess: {
-          backgroundColor: '#2E7D32',
-          '& .MuiTypography-caption': {
-            color: '#fff !important'
-          }
+          backgroundColor: '#2E7D32'
         },
         filledError: {
-          backgroundColor: '#D32F2F',
-          '& .MuiTypography-caption': {
-            color: '#fff !important'
+          backgroundColor: '#D32F2F'
+        }
+      }
+    },
+    MuiCssBaseline: {
+      styleOverrides: (themeParam) => ({
+        '@media (min-width:768px)': {
+          html: {
+            overflowY: 'scroll',
+            scrollbarGutter: 'stable'
           }
         }
-      }
-    },
-    MuiRadioGroup: {
-      styleOverrides: {
-        root: {
-          justifyContent: 'center',
-          marginBottom: '24px'
-        }
-      }
-    },
-    MuiSlider: {
-      styleOverrides: {
-        root: {
-          width: '100%',
-          marginTop: '16px',
-          '& .MuiSlider-valueLabel': {
-            fontFamily: 'Roboto',
-            fontSize: '14px'
-          }
-        }
-      }
-    },
-    MuiTypography: {
-      styleOverrides: {
-        caption: {
-          fontFamily: 'Roboto',
-          fontSize: '0.75rem',
-          color: 'rgba(0, 0, 0, 0.6)'
-        }
-      }
+      })
     }
   },
   sizes: {
-    container: '600px',
-    controls: '320px',
-    resultDisplayWidth: '100%',
-    resultDisplayHeight: '200px'
+    container: 600,
+    controls: 320
   }
 });
-
-declare module '@mui/material/styles' {
-  interface Theme {
-    sizes: {
-      container: string;
-      controls: string;
-      resultDisplayWidth: string;
-      resultDisplayHeight: string;
-    };
-  }
-
-  interface ThemeOptions {
-    sizes?: {
-      container?: string;
-      controls?: string;
-      resultDisplayWidth?: string;
-      resultDisplayHeight?: string;
-    };
-  }
-}
 
 export default theme;

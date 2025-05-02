@@ -1,61 +1,60 @@
-import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Typography, SxProps, Theme } from '@mui/material';
 import { memo } from 'react';
 
-interface HistoryTableProps {
-  history: Array<{
-    id: number;
-    targetValue: number;
-    choice: 'greater' | 'lesser';
-    result: number;
-    win: boolean;
-  }>;
+interface GameResult {
+  id: number;
+  targetValue: number;
+  choice: 'greater' | 'lesser';
+  result: number;
+  win: boolean;
 }
 
-const HistoryTable = memo(function HistoryTable({ history }: HistoryTableProps) {
-  const tableCellStyle = { // [!code ++]
-    fontFamily: 'Roboto',
-    fontWeight: 400,
-    fontSize: '14px',
-    lineHeight: 1.43,
-    letterSpacing: '0.17px'
-  };
+interface HistoryTableProps {
+  history: GameResult[];
+  sx?: SxProps<Theme>;
+}
 
+const HistoryTable = memo(function HistoryTable({ history, sx }: HistoryTableProps) {
   return (
     <TableContainer sx={{
       width: '100%',
-      maxWidth: (theme) => theme.sizes.container
+      maxWidth: (theme) => theme.sizes.container,
+      ...sx
     }}>
       <Table sx={{ width: '100%' }}>
         <TableHead>
           <TableRow sx={{ height: 32 }}>
             <TableCell>
-              <Typography sx={tableCellStyle}>Time</Typography> {/* [!code ++] */}
+              <Typography variant="historyTableHeader">Time</Typography>
             </TableCell>
             <TableCell>
-              <Typography sx={tableCellStyle}>Guess</Typography> {/* [!code ++] */}
+              <Typography variant="historyTableHeader">Guess</Typography>
             </TableCell>
             <TableCell>
-              <Typography sx={tableCellStyle}>Result</Typography> {/* [!code ++] */}
+              <Typography variant="historyTableHeader">Result</Typography>
             </TableCell>
           </TableRow>
         </TableHead>
+
         <TableBody>
           {history.map((game) => (
             <TableRow key={game.id} sx={{ height: 32 }}>
               <TableCell sx={{ py: 0.5 }}>
-                <Typography sx={tableCellStyle}> {/* [!code ++] */}
+                <Typography variant="historyTableCell">
                   {new Date(game.id).toLocaleTimeString()}
                 </Typography>
               </TableCell>
+
               <TableCell sx={{ py: 0.5 }}>
-                <Typography sx={tableCellStyle}> {/* [!code ++] */}
+                <Typography variant="historyTableCell">
                   {game.choice === 'greater' ? 'Over' : 'Under'} {game.targetValue}
                 </Typography>
               </TableCell>
+
               <TableCell sx={{ py: 0.5 }}>
-                <Typography // [!code ++]
-                  sx={{ 
-                    ...tableCellStyle,
+                <Typography
+                  variant="historyTableCell"
+                  sx={{
                     color: game.win ? 'success.main' : 'error.main',
                     fontWeight: 500
                   }}

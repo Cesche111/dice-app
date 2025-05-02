@@ -1,5 +1,4 @@
-// features/game/hooks/useGameLogic.ts
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { GameChoice, GameResult } from '@/types/game';
 
 export const useGameLogic = () => {
@@ -10,37 +9,53 @@ export const useGameLogic = () => {
     win: boolean;
     choice: GameChoice;
   } | null>(null);
-  const [history, setHistory] = useState<GameResult[]>([]);
+  const [rawHistory, setRawHistory] = useState<GameResult[]>([]);
+
+  const stableSetTargetValue = useCallback((value: number) => {
+    setTargetValue(value);
+  }, []);
+
+  const stableSetSelectedChoice = useCallback((choice: GameChoice) => {
+    setSelectedChoice(choice);
+  }, []);
 
   const handlePlay = useCallback(() => {
     const newResult = Math.floor(Math.random() * 100) + 1;
-    const win = selectedChoice === 'greater' 
-      ? newResult > targetValue 
+    const win = selectedChoice === 'greater'
+      ? newResult > targetValue
       : newResult < targetValue;
 
-    setHistory(prev => [
-      {
+    setRawHistory(prev => {
+      const newHistory = [{
         id: Date.now(),
         targetValue,
         choice: selectedChoice,
         result: newResult,
         win
-      },
-      ...prev.slice(0, 9)
-    ]);
+      }, ...prev];
+      return newHistory.slice(0, 10);
+    });
 
-    setLastGameResult({ result: newResult, win, choice: selectedChoice });
-    setTargetValue(100);
-    setSelectedChoice('lesser');
-  }, [selectedChoice, targetValue]);
+    const currentResult = { result: newResult, win, choice: selectedChoice };
+    setLastGameResult(prev =>
+      prev?.result === currentResult.result && prev.win === currentResult.win
+        ? prev
+        : currentResult
+    );
+
+    stableSetTargetValue(100);
+    stableSetSelectedChoice('lesser');
+  }, [selectedChoice, targetValue, stableSetTargetValue, stableSetSelectedChoice]);
+
+  const history = useMemo(() => rawHistory, [rawHistory]);
 
   return {
     targetValue,
     selectedChoice,
     lastGameResult,
     history,
-    setTargetValue,
-    setSelectedChoice,
+    setTargetValue: stableSetTargetValue,
+    setSelectedChoice: stableSetSelectedChoice,
     handlePlay
   };
 };

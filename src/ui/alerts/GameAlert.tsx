@@ -21,7 +21,7 @@ const GameAlert = memo(function GameAlert({ win, choice }: GameAlertProps) {
         <Alert
             severity={win ? "success" : "error"}
             variant="filled"
-            sx={{ 
+            sx={{
                 opacity,
                 transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
             }}

@@ -1,7 +1,8 @@
-import { Box, Button } from '@mui/material';
+import { Box } from '@mui/material';
+import { useCallback, useMemo } from 'react';
 import { useGameLogic } from '@/features/game/hooks/useGameLogic';
-import { GameHeader } from '@/features/game/components/GameHeader';
-import { GameDashboard } from '@/features/game/components/GameDashboard';
+import GameHeader from '@/features/game/components/GameHeader';
+import GameDashboard from '@/features/game/components/GameDashboard';
 import HistoryTable from '@/features/game/components/HistoryTable';
 import PlayButton from '@/ui/buttons/PlayButton';
 
@@ -10,32 +11,52 @@ export default function DiceGame() {
     targetValue,
     selectedChoice,
     lastGameResult,
-    history,
+    history: rawHistory,
     setTargetValue,
     setSelectedChoice,
     handlePlay
   } = useGameLogic();
 
-  return (
-    <Box sx={{
-      maxWidth: (theme) => theme.sizes.container,
-      width: '100%',
-      mx: 'auto',
-      mb: 14,
-      p: 2
-    }}>
-      <GameHeader lastGameResult={lastGameResult} />
+  const handleValueChange = useCallback((value: number) => {
+    setTargetValue(value);
+  }, []);
 
+  const handleChoiceChange = useCallback((choice: 'greater' | 'lesser') => {
+    setSelectedChoice(choice);
+  }, []);
+
+  const memoizedResult = useMemo(() => lastGameResult,
+    [lastGameResult?.result, lastGameResult?.win]);
+
+  const history = useMemo(() => rawHistory, [rawHistory]);
+
+  return (
+    <Box
+      component="main"
+      sx={{
+        maxWidth: (theme) => theme.sizes.container,
+        mx: 'auto',
+        mb: 14,
+        p: 2
+      }}
+    >
+      <GameHeader lastGameResult={memoizedResult} />
       <GameDashboard
         targetValue={targetValue}
         selectedChoice={selectedChoice}
-        onValueChange={setTargetValue}
-        onChoiceChange={setSelectedChoice}
+        onValueChange={handleValueChange}
+        onChoiceChange={handleChoiceChange}
       />
-
-      <PlayButton onClick={handlePlay} />
-
-      <HistoryTable history={history} />
+      <PlayButton
+        onClick={handlePlay}
+        sx={{ mt: 4, mx: 'auto', display: 'block' }}
+      />
+      {history.length > 0 && (
+        <HistoryTable
+          history={history}
+          sx={{ mt: 6 }}
+        />
+      )}
     </Box>
   );
 }
